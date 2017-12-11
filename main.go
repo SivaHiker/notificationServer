@@ -23,7 +23,7 @@ func main() {
 	router.GET("/", Index)
 	router.GET("/hello/:name", Hello)
 	router.GET("/siva1/:id", getId)
-	router.GET("/siva2/:id", getId)
+	router.GET("/siva2/:id", getId1)
 	router.GET("/common_friends/:id1/:id2", getNeo)
 	log.Fatal(fasthttp.ListenAndServe(":8091", router.Handler))
 }
@@ -38,15 +38,39 @@ func Index(ctx *fasthttp.RequestCtx) {
 }
 
 func Hello(ctx *fasthttp.RequestCtx) {
+	uStartMillisec := time.Now().UnixNano() / 1000000
+	rand.Seed(time.Now().UnixNano())
 	fmt.Fprintf(ctx, "hello, %s!\n", ctx.UserValue("name"))
+	uEndMillisec := time.Now().UnixNano() / 1000000
+	routers.GetStatsDClient().TimingStat("loadserver1.latency", (uEndMillisec - uStartMillisec))
+	routers.GetStatsDClient().IncStat("loadserver1.count", 1)
 }
 
 func getId(ctx *fasthttp.RequestCtx) {
+	uStartMillisec := time.Now().UnixNano() / 1000000
+	rand.Seed(time.Now().UnixNano())
 	fmt.Fprintf(ctx, "hello, %s!\n", ctx.UserValue("id"))
+	uEndMillisec := time.Now().UnixNano() / 1000000
+	routers.GetStatsDClient().TimingStat("loadserver2.latency", (uEndMillisec - uStartMillisec))
+	routers.GetStatsDClient().IncStat("loadserver2.count", 1)
+}
+
+func getId1(ctx *fasthttp.RequestCtx) {
+	uStartMillisec := time.Now().UnixNano() / 1000000
+	rand.Seed(time.Now().UnixNano())
+	fmt.Fprintf(ctx, "hello, %s!\n", ctx.UserValue("id"))
+	uEndMillisec := time.Now().UnixNano() / 1000000
+	routers.GetStatsDClient().TimingStat("loadserver3.latency", (uEndMillisec - uStartMillisec))
+	routers.GetStatsDClient().IncStat("loadserver3.count", 1)
 }
 
 func getNeo(ctx *fasthttp.RequestCtx) {
-	fmt.Fprintf(ctx, "hello, %s!\n", ctx.UserValue("id1"))
+	uStartMillisec := time.Now().UnixNano() / 1000000
+	rand.Seed(time.Now().UnixNano())
+	fmt.Fprintf(ctx, "hello, %s!\n", ctx.UserValue("id"))
+	uEndMillisec := time.Now().UnixNano() / 1000000
+	routers.GetStatsDClient().TimingStat("loadserver4.latency", (uEndMillisec - uStartMillisec))
+	routers.GetStatsDClient().IncStat("loadserver4.count", 1)
 }
 
 func requestHandler(ctx *fasthttp.RequestCtx) {
@@ -76,4 +100,3 @@ func requestHandler(ctx *fasthttp.RequestCtx) {
 	c.SetValue("cookie-value")
 	ctx.Response.Header.SetCookie(&c)
 }
-

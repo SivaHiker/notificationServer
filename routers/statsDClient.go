@@ -21,7 +21,7 @@ func GetStatsDClient() *StatsDConfig {
 	//var st StatsDConfig
 	if statsDConfigurator == nil {
 		// statsdClient1, err = statsd.NewClient("192.168.0.134:8125", "golang-client")
-		statsdClient1, err = statsd.NewClient("10.15.0.38:8125", "golang-client")
+		statsdClient1, err = statsd.NewClient("10.15.0.38:7125", "golang-client")
 		if err != nil {
 			log.Fatal(err)
 		} else {
